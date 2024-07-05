@@ -250,10 +250,10 @@ button, input, select, textarea {
   border: 0;
 }
 .wp-block-table tr {
-  border-bottom: 1px solid var(--wp--preset--color--medium-light, #999999);
+  border-bottom: 1px solid var(--wp--preset--color--light, #cccccc);
 }
 .wp-block-table tr:first-child {
-  border-top: 1px solid var(--wp--preset--color--medium-light, #999999);
+  border-top: 1px solid var(--wp--preset--color--light, #cccccc);
 }
 .wp-block-table th, .wp-block-table td {
   padding-top: 0.625rem;
@@ -705,10 +705,10 @@ button, input, select, textarea {
   border: 0;
 }
 .table tr {
-  border-bottom: 1px solid var(--wp--preset--color--medium-light, #999999);
+  border-bottom: 1px solid var(--wp--preset--color--light, #cccccc);
 }
 .table tr:first-child {
-  border-top: 1px solid var(--wp--preset--color--medium-light, #999999);
+  border-top: 1px solid var(--wp--preset--color--light, #cccccc);
 }
 .table th, .table td {
   padding-top: 0.625rem;
@@ -718,6 +718,123 @@ button, input, select, textarea {
   font-size: var(--wp--custom--font-size--small, 0.875rem);
   line-height: var(--wp--custom--line-height--x-large, 2);
   letter-spacing: 0.04rem;
+}
+
+/**
+ * Component - Contact
+ */
+.contact {
+  width: 100%;
+  max-width: 24rem;
+  margin: var(--wp--custom--spacing--large, 3rem) auto;
+  text-align: center;
+}
+@media (min-width: 600px) {
+  .contact {
+    max-width: 36rem;
+  }
+}
+@media (min-width: 900px) {
+  .contact {
+    max-width: 48rem;
+  }
+}
+.contact p {
+  margin: 0;
+}
+.contact__table {
+  width: 100%;
+  margin-top: 0;
+  margin-bottom: var(--wp--custom--spacing--medium, 1.5rem);
+  text-align: left;
+}
+.contact__table thead {
+  border: 0;
+}
+.contact__table tr {
+  border-bottom: 1px solid var(--wp--preset--color--light, #cccccc);
+}
+.contact__table tr:first-child {
+  border-top: 1px solid var(--wp--preset--color--light, #cccccc);
+}
+.contact__table th, .contact__table td {
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+  border: 0;
+  font-weight: 400;
+  font-size: var(--wp--custom--font-size--small, 0.875rem);
+  line-height: var(--wp--custom--line-height--x-large, 2);
+  letter-spacing: 0.04rem;
+}
+.contact__table th {
+  width: 10.5rem;
+  font-weight: 700;
+  font-size: 1rem;
+}
+@media (max-width: 899.9px) {
+  .contact__table tr, .contact__table th, .contact__table td {
+    display: block;
+  }
+}
+.contact__table input[type=text],
+.contact__table input[type=email],
+.contact__table input[type=tel],
+.contact__table input[type=url],
+.contact__table textarea {
+  width: 22.5rem;
+  padding: 0.375rem;
+  border: none;
+  border-radius: 3px;
+  background-color: rgba(209, 240, 252, 0.3);
+}
+@media (min-width: 600px) {
+  .contact__table input[type=text],
+  .contact__table input[type=email],
+  .contact__table input[type=tel],
+  .contact__table input[type=url],
+  .contact__table textarea {
+    width: 36rem;
+  }
+}
+.contact input[type=submit] {
+  background-color: var(--wp--preset--color--primary-dark, #18aada);
+  color: var(--wp--preset--color--background, #ffffff);
+  display: block;
+  width: 12rem;
+  margin: auto;
+  padding: var(--wp--custom--spacing--small, 0.75rem);
+  border: none;
+  border-radius: 3px;
+  text-align: center;
+  text-decoration: none;
+  word-break: break-word;
+  outline: 0;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
+}
+.contact input[type=submit]:hover {
+  opacity: 0.85;
+}
+
+/**
+ * Component - Memo
+ */
+.memo {
+  list-style: none;
+  margin: var(--wp--custom--spacing--medium, 1.5rem) auto;
+  padding: var(--wp--custom--spacing--medium, 1.5rem) var(--wp--custom--spacing--medium, 1.5rem) var(--wp--custom--spacing--small, 0.75rem);
+  border-radius: var(--wp--custom--spacing--small, 0.75rem);
+  background-color: rgba(209, 240, 252, 0.3);
+}
+@media (min-width: 900px) {
+  .memo {
+    list-style: initial;
+    padding-left: var(--wp--custom--spacing--large, 3rem);
+    padding-right: var(--wp--custom--spacing--large, 3rem);
+  }
 }
 
 /**
@@ -1748,10 +1865,10 @@ button, input, select, textarea {
   border: 0;
 }
 .table tr {
-  border-bottom: 1px solid var(--wp--preset--color--medium-light, #999999);
+  border-bottom: 1px solid var(--wp--preset--color--light, #cccccc);
 }
 .table tr:first-child {
-  border-top: 1px solid var(--wp--preset--color--medium-light, #999999);
+  border-top: 1px solid var(--wp--preset--color--light, #cccccc);
 }
 .table th, .table td {
   padding-top: 0.625rem;
