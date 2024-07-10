@@ -5,3 +5,12 @@
 .table {
   @include table();
 }
+
+.tableWrap {
+  width: 100%;
+  overflow-x: auto;
+
+  table {
+    width: 40.5rem;
+  }
+}

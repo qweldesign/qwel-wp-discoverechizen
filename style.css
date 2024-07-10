@@ -720,6 +720,14 @@ button, input, select, textarea {
   letter-spacing: 0.04rem;
 }
 
+.tableWrap {
+  width: 100%;
+  overflow-x: auto;
+}
+.tableWrap table {
+  width: 40.5rem;
+}
+
 /**
  * Component - Contact
  */
