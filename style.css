@@ -417,7 +417,7 @@ button, input, select, textarea {
 }
 .--top.section__titleText, .--top.main__titleText {
   top: 0;
-  width: 120%;
+  width: 125%;
   height: 4.5rem;
   font-size: 150%;
   line-height: 4.5rem;
@@ -501,7 +501,7 @@ button, input, select, textarea {
 }
 .--top.section__titleText, .--top.main__titleText {
   top: 0;
-  width: 120%;
+  width: 125%;
   height: 4.5rem;
   font-size: 150%;
   line-height: 4.5rem;
