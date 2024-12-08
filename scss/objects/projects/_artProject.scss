@@ -4,14 +4,21 @@
 
 .ap {
   &-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 900;
+    width: 100%;
+    height: 6rem;
     background-color: $bodyBg;
 
     &__inner {
-      padding-top: 0.75rem;
-      padding-bottom: 0.75rem;
+      height: 100%;
     }
 
     .gNav {
+      height: 100%;
+
       &__siteBrand {
         flex: 0 1 13.5rem;
         margin: 0;
@@ -20,6 +27,7 @@
 
       &__primaryMenu {
         @include listUnstyled();
+        //flex: 0 1 54rem;
         flex: 0 1 48rem;
         margin: 0;
         padding: 0 space(2);
@@ -46,58 +54,51 @@
   }
 
   &-hero {
-    &__inner {
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: calc(100vh - 6rem);
-      min-height: calc(480px - 6rem); // 小型端末の横向き表示に対応
-      background-color: transparent;
-    }
-    
-    &__content {
-      width: clamp(12rem, 50vw, 24rem);
+    position: relative;
+    @include row(center, center);
+    width: 100%;
+    height: 75vw;
+    margin-top: 6rem;
+    color: themeColor("lightest");
+    text-align: center;
+
+    @media (min-width: breakpoint("sm")) {
+      height: min(calc(100vh - 6rem), 48rem);
     }
 
-    &__logo {
-      filter: invert(1) grayscale(1) brightness(4); // Whiten
+    &__content {
+      img {
+        width: clamp(12rem, 50vw, 24rem);
+        filter: invert(1) grayscale(1) brightness(4); // Whiten
+      }
     }
 
     &__cover {
       position: absolute;
       top: 0;
       left: 0;
-      z-index: -100;
+      z-index: -1;
       width: 100%;
       height: 100%;
-      @include background("primaryDark");
-
-      // Preloader用クラス
-      .preloader & {
-        opacity: 0; // Preloader稼働前は透過
-    
-        .--loaded & {
-          opacity: 1; // イメージを読み込んだら透過を解除
-        }
+  
+      @media (min-width: breakpoint("sm")) {
+        height: min(calc(100vh - 6rem), 48rem);
       }
     }
-    
+  
     &__coverImage {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background-image: url("./assets/img_default.jpg");
       background-position: center center;
       background-size: cover;
-      opacity: 1;
       transition: 1s linear opacity;
 
       @for $i from 1 through 6 {
         &.--num_#{$i} {
-          background-image: url("./assets/art-project/main0#{$i - 1}.jpg");
+          background-image: url("/data/themes/discoverechizen/assets/art-project/main0#{$i - 1}.jpg");
         }
       }
       
@@ -109,12 +110,15 @@
   }
 
   &-section {
-    &.--art-project {
+    scroll-margin-top: 3rem;
+
+    &.--recent-project, &.--archives, &.--team, &.--contact {
       padding-top: space(4);
-      padding-bottom: space(5);
+      padding-bottom: space(4);
     }
 
-    &.--concept, &.--story {
+    &.--concept, &.--story, &.--access {
+      scroll-margin-top: 6rem;
       position: relative;
     }
 
@@ -160,10 +164,6 @@
       padding-bottom: space(4);
       background-color: $bodyBg;
   
-      .ap-section:nth-child(3n-1) & {
-        background-color: #d1f0fc4d;
-      }
-  
       .--concept &, .--story & {
         padding-top: 0;
         padding-bottom: 0;
@@ -173,15 +173,18 @@
           padding-bottom: space(4);
         }
       }
+  
+      .--concept & {
+        background-color: #d1f0fc4d;
+      }
     }
   
     &__container {
-      @include container();
-      padding-top: space(4);
-      padding-bottom: space(4);
+      @extend %__containerLg;
+      max-width: breakpoint("lg");
   
       .--concept &, .--story & {
-        padding-top: 0;
+        padding-bottom: space(4);
       }
     }
   
@@ -189,7 +192,9 @@
       padding: 0 space(2);
   
       h2 {
+        margin-top: 0;
         margin-bottom: space(3);
+        padding-top: space(3);
         line-height: 1.2;
 
         span {

@@ -2,7 +2,7 @@
 /*
 Theme Name: Discover Echizen
 Description: This is a theme for Discover Echizen remade into a block theme.
-Version: 3.3
+Version: 3.3.1
 Requires PHP: 7.4
 Author: Taigo Ito
 Author URI: https://qwel.design/
@@ -578,6 +578,7 @@ button, input, select, textarea {
 .embed {
   position: relative;
   width: 100%;
+  max-width: 100%;
   height: 62.5vh;
 }
 .embed iframe {
@@ -1942,11 +1943,19 @@ button, input, select, textarea {
  * Project - Art Project
  */
 .ap-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 900;
+  width: 100%;
+  height: 6rem;
   background-color: var(--wp--preset--color--background, #ffffff);
 }
 .ap-header__inner {
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
+  height: 100%;
+}
+.ap-header .gNav {
+  height: 100%;
 }
 .ap-header .gNav__siteBrand {
   flex: 0 1 13.5rem;
@@ -1979,36 +1988,38 @@ button, input, select, textarea {
 .ap-header .gNav__menuItem a:hover {
   color: var(--wp--preset--color--primary-dark, #18aada);
 }
-.ap-hero__inner {
+.ap-hero {
   position: relative;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  height: calc(100vh - 6rem);
-  min-height: calc(480px - 6rem);
-  background-color: transparent;
+  width: 100%;
+  height: 75vw;
+  margin-top: 6rem;
+  text-align: center;
 }
-.ap-hero__content {
+@media (min-width: 600px) {
+  .ap-hero {
+    height: min(100vh - 6rem, 48rem);
+  }
+}
+.ap-hero__content img {
   width: clamp(12rem, 50vw, 24rem);
-}
-.ap-hero__logo {
   filter: invert(1) grayscale(1) brightness(4);
 }
 .ap-hero__cover {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: -100;
+  z-index: -1;
   width: 100%;
   height: 100%;
-  background-color: var(--wp--preset--color--primary-dark, #18aada);
-  color: var(--wp--preset--color--background, #ffffff);
 }
-.preloader .ap-hero__cover {
-  opacity: 0;
-}
-.--loaded .preloader .ap-hero__cover {
-  opacity: 1;
+@media (min-width: 600px) {
+  .ap-hero__cover {
+    height: min(100vh - 6rem, 48rem);
+  }
 }
 .ap-hero__coverImage {
   position: absolute;
@@ -2016,39 +2027,41 @@ button, input, select, textarea {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url("./assets/img_default.jpg");
   background-position: center center;
   background-size: cover;
-  opacity: 1;
   transition: 1s linear opacity;
 }
 .ap-hero__coverImage.--num_1 {
-  background-image: url("./assets/art-project/main00.jpg");
+  background-image: url("/data/themes/discoverechizen/assets/art-project/main00.jpg");
 }
 .ap-hero__coverImage.--num_2 {
-  background-image: url("./assets/art-project/main01.jpg");
+  background-image: url("/data/themes/discoverechizen/assets/art-project/main01.jpg");
 }
 .ap-hero__coverImage.--num_3 {
-  background-image: url("./assets/art-project/main02.jpg");
+  background-image: url("/data/themes/discoverechizen/assets/art-project/main02.jpg");
 }
 .ap-hero__coverImage.--num_4 {
-  background-image: url("./assets/art-project/main03.jpg");
+  background-image: url("/data/themes/discoverechizen/assets/art-project/main03.jpg");
 }
 .ap-hero__coverImage.--num_5 {
-  background-image: url("./assets/art-project/main04.jpg");
+  background-image: url("/data/themes/discoverechizen/assets/art-project/main04.jpg");
 }
 .ap-hero__coverImage.--num_6 {
-  background-image: url("./assets/art-project/main05.jpg");
+  background-image: url("/data/themes/discoverechizen/assets/art-project/main05.jpg");
 }
 .ap-hero__coverImage.--fade {
   opacity: 0;
   transition: none;
 }
-.ap-section.--art-project {
-  padding-top: var(--wp--custom--spacing--large, 3rem);
-  padding-bottom: var(--wp--custom--spacing--x-large, 6rem);
+.ap-section {
+  scroll-margin-top: 3rem;
 }
-.ap-section.--concept, .ap-section.--story {
+.ap-section.--recent-project, .ap-section.--archives, .ap-section.--team, .ap-section.--contact {
+  padding-top: var(--wp--custom--spacing--large, 3rem);
+  padding-bottom: var(--wp--custom--spacing--large, 3rem);
+}
+.ap-section.--concept, .ap-section.--story, .ap-section.--access {
+  scroll-margin-top: 6rem;
   position: relative;
 }
 @media (min-width: 600px) {
@@ -2075,9 +2088,6 @@ button, input, select, textarea {
   padding-bottom: var(--wp--custom--spacing--large, 3rem);
   background-color: var(--wp--preset--color--background, #ffffff);
 }
-.ap-section:nth-child(3n-1) .ap-section__inner {
-  background-color: rgba(209, 240, 252, 0.3019607843);
-}
 .--concept .ap-section__inner, .--story .ap-section__inner {
   padding-top: 0;
   padding-bottom: 0;
@@ -2088,19 +2098,22 @@ button, input, select, textarea {
     padding-bottom: var(--wp--custom--spacing--large, 3rem);
   }
 }
+.--concept .ap-section__inner {
+  background-color: rgba(209, 240, 252, 0.3019607843);
+}
 .ap-section__container {
   max-width: 1200px;
-  padding-top: var(--wp--custom--spacing--large, 3rem);
-  padding-bottom: var(--wp--custom--spacing--large, 3rem);
 }
 .--concept .ap-section__container, .--story .ap-section__container {
-  padding-top: 0;
+  padding-bottom: var(--wp--custom--spacing--large, 3rem);
 }
 .ap-section__content {
   padding: 0 var(--wp--custom--spacing--small, 0.75rem);
 }
 .ap-section__content h2 {
+  margin-top: 0;
   margin-bottom: var(--wp--custom--spacing--medium, 1.5rem);
+  padding-top: var(--wp--custom--spacing--medium, 1.5rem);
   line-height: 1.2;
 }
 .ap-section__content h2 span {
