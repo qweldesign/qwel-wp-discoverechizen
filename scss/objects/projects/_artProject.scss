@@ -59,7 +59,7 @@
     width: 100%;
     height: 75vw;
     margin-top: 6rem;
-    color: themeColor("lightest");
+    color: themeColor("background");
     text-align: center;
 
     @media (min-width: breakpoint("sm")) {
@@ -67,9 +67,11 @@
     }
 
     &__content {
-      img {
-        width: clamp(12rem, 50vw, 24rem);
-        filter: invert(1) grayscale(1) brightness(4); // Whiten
+      h1 {
+        color: themeColor("background");
+        font-family: 'Courier New', Courier, monospace;
+        font-weight: 700;
+        font-size: min(8vw, 3rem);
       }
     }
 

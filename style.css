@@ -1997,6 +1997,7 @@ button, input, select, textarea {
   width: 100%;
   height: 75vw;
   margin-top: 6rem;
+  color: var(--wp--preset--color--background, #ffffff);
   text-align: center;
 }
 @media (min-width: 600px) {
@@ -2004,9 +2005,11 @@ button, input, select, textarea {
     height: min(100vh - 6rem, 48rem);
   }
 }
-.ap-hero__content img {
-  width: clamp(12rem, 50vw, 24rem);
-  filter: invert(1) grayscale(1) brightness(4);
+.ap-hero__content h1 {
+  color: var(--wp--preset--color--background, #ffffff);
+  font-family: "Courier New", Courier, monospace;
+  font-weight: 700;
+  font-size: min(8vw, 3rem);
 }
 .ap-hero__cover {
   position: absolute;
