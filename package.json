@@ -1,6 +1,6 @@
 {
-  "name": "qwel-discoverechizen",
-  "version": "3.0",
+  "name": "qwel-wp-discoverechizen",
+  "version": "3.3.1",
   "description": "",
   "main": "init.js",
   "scripts": {
@@ -8,12 +8,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/taigoito/qwel.git"
+    "url": "git+https://github.com/qweldesign/qwel-wp-discoverechizen.git"
   },
   "author": "Taigo Ito",
-  "license": "GPL",
+  "license": "UNLICENSED",
   "bugs": {
-    "url": "https://github.com/taigoito/qwel/issues"
+    "url": "https://github.com/qweldesign/qwel-wp-discoverechizen/issues"
   },
-  "homepage": "https://github.com/taigoito/qwel#readme"
+  "homepage": "https://github.com/qweldesign/qwel-wp-discoverechizen#readme"
 }
