@@ -19,7 +19,9 @@
   &__heading {
     margin-top: space(2);
     margin-bottom: space(1);
+    font-weight: 700;
     font-size: $h3FontSize;
+    line-height: 1.2;
   }
 
   &__content p {

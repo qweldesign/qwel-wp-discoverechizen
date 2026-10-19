@@ -35,3 +35,12 @@
     }
   }
 }
+
+// 個別投稿ページ (ブログの各記事) では動かさない (共通のパーツ page-header の見出しも含めて, 最初から表示)
+.has-readable .single-post {
+  .--readable, [data-readable] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

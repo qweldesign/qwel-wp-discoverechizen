@@ -2,7 +2,7 @@
 /*
 Theme Name: Discover Echizen
 Description: This is a theme for Discover Echizen remade into a block theme.
-Version: 3.4.0
+Version: 3.4.1
 Requires PHP: 7.4
 Author: Taigo Ito
 Author URI: https://qwel.design/
@@ -845,15 +845,15 @@ button, input, select, textarea {
 .memo {
   list-style: none;
   margin: var(--wp--custom--spacing--medium, 1.5rem) auto;
-  padding: var(--wp--custom--spacing--medium, 1.5rem) var(--wp--custom--spacing--medium, 1.5rem) var(--wp--custom--spacing--small, 0.75rem);
+  padding: var(--wp--custom--spacing--medium, 1.5rem) var(--wp--custom--spacing--medium, 1.5rem) var(--wp--custom--spacing--small, 0.75rem) !important;
   border-radius: var(--wp--custom--spacing--small, 0.75rem);
   background-color: rgba(209, 240, 252, 0.3);
 }
 @media (min-width: 900px) {
   .memo {
     list-style: initial;
-    padding-left: var(--wp--custom--spacing--large, 3rem);
-    padding-right: var(--wp--custom--spacing--large, 3rem);
+    padding-left: var(--wp--custom--spacing--large, 3rem) !important;
+    padding-right: var(--wp--custom--spacing--large, 3rem) !important;
   }
 }
 
@@ -2512,7 +2512,7 @@ button, input, select, textarea {
  * Project - Post Item
  */
 .postItem__image img {
-  aspect-ratio: 1.3333333333;
+  aspect-ratio: 1.6;
   -o-object-fit: cover;
      object-fit: cover;
 }
@@ -2524,7 +2524,9 @@ button, input, select, textarea {
 .postItem__heading {
   margin-top: var(--wp--custom--spacing--small, 0.75rem);
   margin-bottom: var(--wp--custom--spacing--x-small, 0.375rem);
+  font-weight: 700;
   font-size: var(--wp--custom--font-size--large, 1.33rem);
+  line-height: 1.2;
 }
 .postItem__content p {
   text-align: justify;
@@ -3513,6 +3515,159 @@ section:not(.--discover) .section__inner {
   flex-wrap: wrap;
   gap: var(--wp--custom--spacing--small, 0.75rem) var(--wp--custom--spacing--large, 3rem);
   margin-block: var(--wp--custom--spacing--medium, 1.5rem) 0;
+}
+
+/**
+ * Project - Post Entry
+ * 個別投稿ページ (templates/single.html) の記事の見た目を, 新サイトの記事 (.entry) にそろえる
+ * - タイトルを大きく太く, 日付・カテゴリーはタイトルの下に小さく, その下に区切り線
+ * - 本文の行間・字間を広げ, 見出し (h2〜h6)・リンク・リスト・引用・表を新サイトと同じ形に
+ * 新サイトとテーマで文字サイズの段階が違うので, 数値で直接書く
+ * body.single-post (WordPress が個別投稿ページに付けるクラス) の中だけに効かせる
+ */
+.single-post .postItem {
+  display: flex;
+  flex-direction: column;
+}
+.single-post .postItem__heading {
+  order: 1;
+  margin: var(--wp--custom--spacing--large, 3rem) 0 var(--wp--custom--spacing--small, 0.75rem);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+}
+.single-post .postItem__info {
+  order: 2;
+  margin: 0 0 var(--wp--custom--spacing--large, 3rem);
+  padding-bottom: var(--wp--custom--spacing--large, 3rem);
+  border-bottom: 1px solid #d9d9d9;
+  color: #808080;
+  font-size: 0.875rem;
+  letter-spacing: 0.08em;
+}
+.single-post .postItem__content {
+  order: 3;
+}
+
+.single-post .postItem__content {
+  font-size: 1rem;
+  line-height: 1.8;
+  letter-spacing: 0.04em;
+  overflow-wrap: anywhere;
+}
+.single-post .postItem__content > :first-child {
+  margin-top: 0;
+}
+.single-post .postItem__content p {
+  margin: 0 0 var(--wp--custom--spacing--small, 0.75rem);
+  text-align: left;
+}
+.single-post .postItem__content h2, .single-post .postItem__content h3, .single-post .postItem__content h4, .single-post .postItem__content h5, .single-post .postItem__content h6 {
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+}
+.single-post .postItem__content h2 {
+  margin: var(--wp--custom--spacing--large, 3rem) 0 var(--wp--custom--spacing--medium, 1.5rem);
+  padding-bottom: var(--wp--custom--spacing--small, 0.75rem);
+  border-bottom: 2px solid rgba(55, 190, 240, 0.15);
+  background: linear-gradient(var(--wp--preset--color--primary, #37bef0), var(--wp--preset--color--primary, #37bef0)) left bottom/6rem 2px no-repeat;
+  font-size: 1.5rem !important;
+}
+.single-post .postItem__content h3 {
+  margin: var(--wp--custom--spacing--large, 3rem) 0 var(--wp--custom--spacing--medium, 1.5rem);
+  padding-left: var(--wp--custom--spacing--small, 0.75rem);
+  border-left: var(--wp--custom--spacing--x-small, 0.375rem) solid var(--wp--preset--color--primary, #37bef0);
+  font-size: 1.25rem !important;
+}
+.single-post .postItem__content h4 {
+  margin: var(--wp--custom--spacing--large, 3rem) 0 var(--wp--custom--spacing--medium, 1.5rem);
+  color: var(--wp--preset--color--primary, #37bef0);
+  font-size: 1.125rem !important;
+}
+.single-post .postItem__content h5, .single-post .postItem__content h6 {
+  margin: var(--wp--custom--spacing--medium, 1.5rem) 0 var(--wp--custom--spacing--small, 0.75rem);
+  font-size: 1rem !important;
+}
+.single-post .postItem__content a {
+  color: var(--wp--preset--color--primary, #37bef0);
+}
+.single-post .postItem__content a:hover, .single-post .postItem__content a:focus {
+  text-decoration: underline;
+}
+.single-post .postItem__content strong {
+  font-weight: 700;
+}
+.single-post .postItem__content ul, .single-post .postItem__content ol {
+  margin: 0 0 var(--wp--custom--spacing--medium, 1.5rem);
+  padding-left: var(--wp--custom--spacing--medium, 1.5rem);
+}
+.single-post .postItem__content li {
+  margin: var(--wp--custom--spacing--x-small, 0.375rem) 0;
+  padding-left: var(--wp--custom--spacing--x-small, 0.375rem);
+}
+.single-post .postItem__content li::marker {
+  color: var(--wp--preset--color--primary, #37bef0);
+}
+.single-post .postItem__content ol > li::marker {
+  font-weight: 700;
+}
+.single-post .postItem__content li > ul, .single-post .postItem__content li > ol {
+  margin: var(--wp--custom--spacing--x-small, 0.375rem) 0 0;
+}
+.single-post .postItem__content blockquote {
+  margin: var(--wp--custom--spacing--large, 3rem) 0;
+  padding: var(--wp--custom--spacing--medium, 1.5rem);
+  border-left: var(--wp--custom--spacing--x-small, 0.375rem) solid var(--wp--preset--color--primary, #37bef0);
+  border-radius: 0 var(--wp--custom--spacing--x-small, 0.375rem) var(--wp--custom--spacing--x-small, 0.375rem) 0;
+  background-color: rgba(55, 190, 240, 0.15);
+  color: #4d4d4d;
+}
+.single-post .postItem__content blockquote p, .single-post .postItem__content blockquote cite {
+  font-style: normal;
+  font-size: 1rem;
+}
+.single-post .postItem__content blockquote p:last-child {
+  margin-bottom: 0;
+}
+.single-post .postItem__content > .wp-block-image, .single-post .postItem__content > figure:not(.wp-block-gallery) {
+  margin-top: var(--wp--custom--spacing--medium, 1.5rem);
+  margin-bottom: var(--wp--custom--spacing--medium, 1.5rem);
+}
+.single-post .postItem__content .wp-block-image img {
+  border-radius: var(--wp--custom--spacing--x-small, 0.375rem);
+}
+.single-post .postItem__content figcaption {
+  margin-top: var(--wp--custom--spacing--small, 0.75rem);
+  color: #808080;
+}
+.single-post .postItem__content table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.8;
+  border-collapse: collapse;
+}
+.single-post .postItem__content th, .single-post .postItem__content td {
+  padding: var(--wp--custom--spacing--small, 0.75rem);
+  border: 0;
+  border-bottom: 1px solid #d9d9d9;
+  white-space: nowrap;
+  vertical-align: top;
+}
+.single-post .postItem__content thead th {
+  border-bottom: 2px solid var(--wp--preset--color--primary, #37bef0);
+  background-color: rgba(55, 190, 240, 0.15);
+  font-weight: 700;
+}
+.single-post .postItem__content hr {
+  height: 0;
+  margin: var(--wp--custom--spacing--large, 3rem) 0;
+  border: 0;
+  border-top: 1px solid #d9d9d9;
 }
 
 /**
@@ -5011,4 +5166,9 @@ section:not(.--discover) .section__inner {
     transform: none;
     transition: none;
   }
+}
+.has-readable .single-post .--readable, .has-readable .single-post [data-readable] {
+  opacity: 1;
+  transform: none;
+  transition: none;
 }
