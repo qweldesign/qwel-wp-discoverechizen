@@ -1,10 +1,12 @@
 {
   "name": "qwel-wp-discoverechizen",
-  "version": "3.3.1",
+  "version": "3.4.0",
   "description": "",
   "main": "init.js",
   "scripts": {
-    "webpack": "webpack"
+    "webpack": "webpack",
+    "sass": "sass --no-source-map scss/style.scss style.css",
+    "build": "npm run sass && npm run webpack"
   },
   "repository": {
     "type": "git",
@@ -15,5 +17,13 @@
   "bugs": {
     "url": "https://github.com/qweldesign/qwel-wp-discoverechizen/issues"
   },
-  "homepage": "https://github.com/qweldesign/qwel-wp-discoverechizen#readme"
+  "homepage": "https://github.com/qweldesign/qwel-wp-discoverechizen#readme",
+  "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "babel-loader": "^9.2.1",
+    "sass": "^1.69.5",
+    "webpack": "^5.101.0",
+    "webpack-cli": "^5.1.4"
+  }
 }

@@ -1,0 +1,586 @@
+/**
+ * Project - Study Tour
+ * 教育旅行 (/study-tour/)
+ * 旧サイトのイラスト・見出し画像は使わず, 新サイトの見出し (titleArea) とカードだけで組む
+ */
+
+$studyTour-tint: rgba(#37bef0, 0.1);
+$studyTour-radius: space(2);
+
+// このページだけの3番目のアクセントカラー (山の緑)
+// 海 (primary) とオレンジ (secondary) と同じくらいの明るさ・鮮やかさにそろえる
+// 文字に使うときは, 白地で読めるよう濃い方 (dark) を使う
+$studyTour-green:      #5aae3a;
+$studyTour-green-dark: #3d8a2a;
+
+// 海・山・里の色 (tone. --tone: 線や番号, --tone-text: 文字, --tone-tint: 面)
+$studyTour-tones: (
+  sea:      (themeColor("primary"),   themeColor("primaryDark"), rgba(#37bef0, 0.1)),
+  mountain: ($studyTour-green,         $studyTour-green-dark,       rgba($studyTour-green, 0.12)),
+  village:  (#f08c1e, #b85410,                     rgba(#f08c1e, 0.1)),
+);
+
+.studyTour {
+  // 既定は海の色. is-sea / is-mountain / is-village で切り替える
+  --tone: #{themeColor("primary")};
+  --tone-text: #{themeColor("primaryDark")};
+  --tone-tint: #{$studyTour-tint};
+
+  @each $name, $tone in $studyTour-tones {
+    .is-#{$name} {
+      --tone: #{nth($tone, 1)};
+      --tone-text: #{nth($tone, 2)};
+      --tone-tint: #{nth($tone, 3)};
+    }
+  }
+
+  // 導入 (文章と写真4枚)
+  &__intro {
+    display: grid;
+    gap: space(4);
+    align-items: center;
+    margin-block: 0 space(5);
+
+    @media (min-width: breakpoint("md")) {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+  }
+
+  &__lead > :last-child {
+    margin-block-end: 0;
+  }
+
+  &__catch {
+    color: themeColor("primaryDark");
+    font-weight: 700;
+    font-size: 1.5rem;
+    line-height: 1.5;
+    letter-spacing: 0.08em;
+  }
+
+  &__mosaic {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: space(2);
+
+    img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      border-radius: $studyTour-radius;
+    }
+
+    // 互い違いにずらして, 並べた写真に動きを出す
+    img:nth-child(even) {
+      transform: translateY(space(3));
+    }
+  }
+
+  &__section {
+    margin-block: 0 space(5);
+  }
+
+  &__sectionLead {
+    margin-block: 0 space(4);
+    text-align: center;
+    line-height: 1.8;
+    letter-spacing: 0.04em;
+  }
+
+  &__note {
+    margin-block: space(3) 0;
+    color: #808080;
+    font-size: 0.875rem;
+    letter-spacing: 0.04em;
+  }
+
+  // 3つの特徴 (番号付きのカード)
+  &__features {
+    @include listUnstyled();
+    display: grid;
+    gap: space(3);
+    margin: 0;
+    counter-reset: feature;
+
+    @media (min-width: breakpoint("md")) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  &__feature {
+    padding: space(3);
+    border-radius: $studyTour-radius;
+    background-color: var(--tone-tint);
+    counter-increment: feature;
+    line-height: 1.8;
+    letter-spacing: 0.04em;
+
+    &::before {
+      content: counter(feature, decimal-leading-zero);
+      display: block;
+      color: var(--tone);
+      font-style: italic;
+      font-weight: 700;
+      font-size: 1.5rem;
+      line-height: 1.2;
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+
+  &__featureTitle {
+    font-weight: 700;
+    margin-block: space(1) space(2);
+    font-size: 1.125rem;
+    letter-spacing: 0.08em;
+  }
+
+  // 紹介動画 (PC では2本を横に並べる)
+  &__videos {
+    display: grid;
+    gap: space(3);
+    margin-block: 0 space(4);
+
+    @media (min-width: breakpoint("md")) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  &__video {
+    margin: 0;
+
+    video {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 9;
+      border-radius: $studyTour-radius;
+      background-color: #000;
+    }
+
+    figcaption {
+      margin-block-start: space(1);
+      color: #808080;
+      font-size: 0.875rem;
+      text-align: center;
+      letter-spacing: 0.04em;
+    }
+  }
+
+  // 体験の様子 (横に流す写真)
+  &__gallery {
+    @include listUnstyled();
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: min(60vw, 15rem);
+    gap: space(2);
+    margin: 0 0 space(4);
+    padding-block-end: space(2);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+
+    li {
+      scroll-snap-align: start;
+    }
+
+    img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      border-radius: $studyTour-radius;
+    }
+  }
+
+  // 体験プログラムの一覧
+  &__programs {
+    @include listUnstyled();
+    display: grid;
+    gap: space(2);
+    margin: 0;
+
+    @media (min-width: breakpoint("sm")) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    @media (min-width: breakpoint("lg")) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  &__program {
+    padding: space(2) space(3);
+    border-inline-start: 4px solid var(--tone);
+    border-radius: 0 $studyTour-radius $studyTour-radius 0;
+    background-color: var(--tone-tint);
+    letter-spacing: 0.04em;
+  }
+
+  &__host {
+    margin: 0;
+    color: #808080;
+    font-size: 0.875rem;
+  }
+
+  // 体験の分類 (海・山・里) の凡例と, カードの右上の札
+  &__fields {
+    @include listUnstyled();
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: space(1) space(2);
+    margin: 0 0 space(3);
+  }
+
+  &__field {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.2em 0.9em;
+    border-radius: 999px;
+    background-color: var(--tone-tint);
+    color: var(--tone-text);
+    font-weight: 700;
+    font-size: 0.875rem;
+    letter-spacing: 0.06em;
+
+    &::before {
+      content: "";
+      width: 0.6em;
+      height: 0.6em;
+      border-radius: 50%;
+      background-color: var(--tone);
+    }
+  }
+
+  &__program {
+    position: relative;
+
+    .studyTour__field {
+      position: absolute;
+      top: space(2);
+      right: space(2);
+      padding: 0 0.6em;
+      background-color: #fff;
+
+      &::before {
+        display: none;
+      }
+    }
+  }
+
+  &__programTitle {
+    font-weight: 700;
+    margin: 0;
+    font-size: 1.125rem;
+    line-height: 1.8;
+  }
+
+  &__programText {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.8;
+  }
+
+  // 宿泊 (地区ごとの一覧)
+  &__stays {
+    display: grid;
+    gap: space(4) space(5);
+
+    @media (min-width: breakpoint("md")) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  &__areaName {
+    font-weight: 700;
+    margin: 0 0 space(2);
+    padding-block-end: space(1);
+    border-block-end: 2px solid var(--tone);
+    color: var(--tone-text);
+    font-size: 1.125rem;
+    letter-spacing: 0.08em;
+  }
+
+  &__stayList {
+    @include listUnstyled();
+    margin: 0;
+
+    li {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0 space(2);
+      padding-block: space(1);
+      border-block-end: 1px solid #d9d9d9;
+      line-height: 1.8;
+    }
+  }
+
+  &__stayName {
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  &__stayMeta {
+    color: #808080;
+    font-size: 0.875rem;
+
+    a {
+      color: inherit;
+    }
+  }
+
+  // ご予約の流れ (3ステップ)
+  &__steps {
+    @include listUnstyled();
+    display: grid;
+    gap: space(3);
+    margin: 0 0 space(4);
+    counter-reset: step;
+
+    @media (min-width: breakpoint("md")) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  &__step {
+    position: relative;
+    padding: space(3);
+    border: 2px solid var(--tone);
+    border-radius: $studyTour-radius;
+    counter-increment: step;
+    line-height: 1.8;
+    letter-spacing: 0.04em;
+
+    &::before {
+      content: "STEP " counter(step);
+      color: var(--tone-text);
+      font-style: italic;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+
+  &__stepTitle {
+    font-weight: 700;
+    margin-block: 0 space(1);
+    font-size: 1.125rem;
+  }
+
+  // 2段組み (キャンセル料とよくある質問)
+  &__columns {
+    display: grid;
+    gap: space(3);
+
+    @media (min-width: breakpoint("lg")) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  &__box {
+    padding: space(3);
+    border-radius: $studyTour-radius;
+    background-color: $studyTour-tint;
+    line-height: 1.8;
+    letter-spacing: 0.04em;
+
+    > p {
+      margin-block: 0 space(2);
+    }
+
+    > :last-child {
+      margin-block-end: 0;
+    }
+  }
+
+  &__boxTitle {
+    font-weight: 700;
+    margin-block: 0 space(2);
+    color: themeColor("primaryDark");
+    font-size: 1.125rem;
+    letter-spacing: 0.08em;
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+
+    th, td {
+      padding: space(1) space(2);
+      border-block-end: 1px solid #d9d9d9;
+      text-align: left;
+    }
+
+    th {
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    // アクセスは所要時間を右にそろえる
+    &.is-access td {
+      &:last-child {
+        text-align: right;
+      }
+    }
+
+    // スマホでは, 出発地を上の段に出し, 交通手段と所要時間を下の段に並べる
+    &.is-access tr {
+      @media (max-width: breakpoint("sm") - 0.1px) {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        border-block-end: 1px solid #d9d9d9;
+
+        th {
+          grid-column: 1 / -1;
+          padding-block-end: 0;
+          border: 0;
+        }
+
+        td {
+          padding-block-start: 0;
+          border: 0;
+        }
+      }
+    }
+  }
+
+  &__faq {
+    margin: 0;
+
+    dt {
+      position: relative;
+      padding-inline-start: 1.75em;
+      font-weight: 700;
+
+      &::before {
+        content: "Q";
+        position: absolute;
+        left: 0;
+        color: themeColor("primary");
+        font-style: italic;
+      }
+    }
+
+    dd {
+      position: relative;
+      margin: 0 0 space(2);
+      padding-inline-start: 1.75em;
+
+      &::before {
+        content: "A";
+        position: absolute;
+        left: 0;
+        color: #f08c1e;
+        font-style: italic;
+        font-weight: 700;
+      }
+
+      &:last-child {
+        margin-block-end: 0;
+      }
+    }
+
+    a {
+      color: themeColor("primaryDark");
+      text-decoration: underline;
+      text-underline-offset: 0.25em;
+    }
+  }
+
+  // 越前海岸の位置 (文章と略図)
+  &__coast {
+    display: grid;
+    gap: space(3) space(4);
+    align-items: center;
+    margin-block: 0 space(4);
+
+    @media (min-width: breakpoint("md")) {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+  }
+
+  &__coastText {
+    margin: 0;
+    line-height: 2;
+    letter-spacing: 0.04em;
+  }
+
+  &__coastMap {
+    margin: 0;
+
+    img {
+      width: 100%;
+      max-width: 33.75rem;
+      height: auto;
+      margin-inline: auto;
+    }
+  }
+
+  // コンシェルジュ (問い合わせへの導線)
+  &__concierge {
+    display: grid;
+    gap: space(3) space(4);
+    align-items: center;
+    margin-block: 0 space(5);
+    padding: space(4) space(3);
+    border-radius: space(3);
+    background-color: var(--tone-tint);
+    line-height: 1.8;
+    letter-spacing: 0.04em;
+
+    @media (min-width: breakpoint("md")) {
+      grid-template-columns: 12rem minmax(0, 1fr);
+      padding: space(4);
+    }
+  }
+
+  &__conciergeFigure {
+    width: 9rem;
+    margin: 0 auto;
+
+    @media (min-width: breakpoint("md")) {
+      width: 100%;
+    }
+
+    img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: 50%;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  &__conciergeBody > p {
+    margin-block: 0 space(2);
+  }
+
+  &__conciergeRole {
+    color: #808080;
+    font-size: 0.875rem;
+  }
+
+  &__conciergeName {
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: 0.08em;
+  }
+
+  // 問い合わせとパンフレットの導線 (横に並べ, 狭いときは折り返す)
+  &__ctas {
+    @include listUnstyled();
+    display: flex;
+    flex-wrap: wrap;
+    gap: space(2) space(4);
+    margin-block: space(3) 0;
+  }
+}

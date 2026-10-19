@@ -1,0 +1,261 @@
+/**
+ * Project - History
+ * 沿革の年表 (/about-us/). 動きは js/history-timeline.js が書き込む CSS 変数から決める
+ *
+ * --history-progress: 縦の線の満ち具合 (0〜1)
+ * --item-progress: 各年の写真が開く・文章が出る進み具合 (0〜1)
+ * どちらも JS が動いていなければ 1 (最初から全部表示)
+ */
+
+$history-line-x:    0.75rem; // 縦の線の位置 (一覧の左端から)
+$history-indent:    2.75rem; // 縦の線から本文までの字下げ
+$history-dot-size:  1rem;
+$history-line-bg:   rgba(#37bef0, 0.2);
+$history-line-fill: themeColor("primary");
+
+// 背景の海 (canvas) が見えるように, テーマの .main__body の白地を外す
+.main:has(.history) {
+  isolation: isolate;
+
+  .main__body {
+    background-color: transparent;
+  }
+}
+
+.history {
+  --history-progress: 1;
+  position: relative;
+
+  @media (min-width: breakpoint("md")) {
+    display: grid;
+    grid-template-columns: 11rem minmax(0, 1fr);
+    gap: space(4);
+  }
+
+  // 背景の海 (画面に固定した canvas. 年表が画面に入っている間だけ, ふわっと出す)
+  // z-index: -1 で本文の後ろに置く (.history は重なりの基準を作らないので, ページの背景の上・本文の下に描かれる)
+  &__sea {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    pointer-events: none;
+
+    &.is-visible {
+      opacity: 1;
+    }
+
+    // JS が動いていない・動きを減らす設定のときは出さない
+    .history:not(.is-animated) & {
+      display: none;
+    }
+  }
+
+  // 今の年 (PC のみ. 画面の上に固定して, スクロールに合わせて数字が切り替わる)
+  &__current {
+    display: none;
+
+    @media (min-width: breakpoint("md")) {
+      position: sticky;
+      top: calc(var(--scroll-offset, 0px) + #{space(5)});
+      align-self: start;
+      display: block;
+      margin: 0;
+      color: themeColor("primary");
+      text-shadow: 0 0 0.5em #fff, 0 0 0.15em #fff;
+      font-style: italic;
+      font-weight: 700;
+      font-size: 4.5rem;
+      line-height: 1;
+      letter-spacing: 0.02em;
+    }
+
+    span {
+      display: inline-block;
+
+      &.is-changed {
+        animation: history-year-change 0.5s ease both;
+      }
+    }
+
+    // JS が動いていないときは, 先頭の年のままになるので出さない
+    .history:not(.is-animated) & {
+      visibility: hidden;
+    }
+  }
+
+  // 縦の線 (下地と, スクロールに合わせて満ちていく線)
+  &__list {
+    @include listUnstyled();
+    position: relative;
+    margin: 0;
+    padding-inline-start: $history-indent;
+
+    &::before, &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: $history-line-x;
+      width: 2px;
+      border-radius: 1px;
+    }
+
+    &::before {
+      bottom: 0;
+      background-color: $history-line-bg;
+    }
+
+    &::after {
+      height: calc(var(--history-progress) * 100%);
+      background: linear-gradient(themeColor("primaryDark"), $history-line-fill);
+    }
+  }
+
+  &__item {
+    --item-progress: 1;
+    position: relative;
+    margin: 0;
+    padding-block-end: space(5);
+
+    &:last-child {
+      padding-block-end: 0;
+    }
+
+    // 線の上の点 (画面の中央を過ぎると塗る)
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0.55rem;
+      left: calc(#{$history-line-x} - #{$history-indent} - #{$history-dot-size} / 2 + 1px);
+      z-index: 1;
+      width: $history-dot-size;
+      height: $history-dot-size;
+      border: 2px solid $history-line-fill;
+      border-radius: 50%;
+      background-color: #fff;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    &.is-passed::before, .history:not(.is-animated) &::before {
+      background-color: $history-line-fill;
+    }
+
+    &.is-passed::before {
+      transform: scale(1.2);
+    }
+  }
+
+  // 年の中の見出し・本文・写真の組 (1年に複数置ける)
+  &__entry {
+    --item-progress: 1;
+
+    & + & {
+      margin-block-start: space(4);
+    }
+
+    // 写真がある組は, PC で文章と写真を横に並べる (写真のある組の偶数番目は左右を入れ替える)
+    &.has-figure {
+      @media (min-width: breakpoint("md")) {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+        gap: space(4);
+        align-items: center;
+      }
+    }
+
+    &.is-reverse .history__figure {
+      @media (min-width: breakpoint("md")) {
+        order: -1;
+      }
+    }
+  }
+
+  // 文章 (下から少し浮き上がりながら出る)
+  &__body {
+    opacity: clamp(0, calc(var(--item-progress) * 1.6 - 0.3), 1);
+    transform: translateY(calc((1 - var(--item-progress)) * 1.5rem));
+  }
+
+  // 年号と見出しは, 背景の海が濃くなっても読めるように, 白いふちを薄く付ける
+  &__year, &__title {
+    text-shadow: 0 0 0.5em #fff, 0 0 0.15em #fff;
+  }
+
+  &__year {
+    opacity: clamp(0, calc(var(--item-progress) * 1.6 - 0.3), 1);
+    transform: translateY(calc((1 - var(--item-progress)) * 1.5rem));
+    margin: 0 0 space(1);
+    color: themeColor("primaryDark");
+    font-style: italic;
+    font-weight: 700;
+    font-size: 1.5rem;
+    line-height: 1.8;
+    letter-spacing: 0.04em;
+  }
+
+  &__title {
+    margin-block: 0 space(2);
+    font-weight: 700;
+    font-size: 1.25rem;
+    line-height: 1.8;
+    letter-spacing: 0.06em;
+  }
+
+  // 本文 (Markdown から出力した段落など)
+  &__text {
+    line-height: 2;
+    letter-spacing: 0.04em;
+
+    > * {
+      margin: 0;
+    }
+
+    > * + * {
+      margin-block-start: 1em;
+    }
+
+    a {
+      color: themeColor("primaryDark");
+      text-decoration: underline;
+    }
+  }
+
+  // 写真 (左から幕が開くように現れる)
+  &__figure {
+    margin: space(3) 0 0;
+
+    @media (min-width: breakpoint("md")) {
+      margin-block-start: 0;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      border-radius: 0.5rem;
+      clip-path: inset(0 calc((1 - var(--item-progress)) * 100%) 0 0 round 0.5rem);
+    }
+  }
+}
+
+@keyframes history-year-change {
+  from {
+    opacity: 0;
+    transform: translateY(0.5em);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .history__current span.is-changed {
+    animation: none;
+  }
+}

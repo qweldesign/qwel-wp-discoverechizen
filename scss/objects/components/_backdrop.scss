@@ -1,0 +1,60 @@
+/**
+ * Component - Backdrop
+ * ページの上部に敷く, 薄くした写真の背景 (新サイトと共通)
+ * 写真は下に向かって白く溶け, 続きのコンテンツへ目線を送る (スクロールを促す)
+ * 使い方: ページの本文の先頭にカスタム HTML ブロックで <div class="backdrop --aboutUs" aria-hidden="true"></div> を置く
+ * 写真はページごとの修飾クラス (--aboutUs など) で指定する (style.css からの相対パス)
+ */
+
+$backdrop-height:  min(120vh, 64rem);
+$backdrop-opacity: 0.25;
+
+// 背景を .main の中だけに重ねる (body の白い背景より手前, 本文より奥)
+.main:has(.backdrop) {
+  position: relative;
+  isolation: isolate;
+
+  // テーマの .main__headerInner と .main__body は白地なので, 背景が透けるように外す
+  .main__headerInner, .main__body {
+    background-color: transparent;
+  }
+}
+
+.backdrop {
+  position: absolute;
+  z-index: -1;
+  // 固定ヘッダーの裏まで伸ばす
+  top: 0;
+  left: 50%;
+  width: 100%;
+  height: $backdrop-height;
+  transform: translateX(-50%);
+  overflow: hidden;
+  pointer-events: none;
+  // 下に向かって透明に
+  mask-image: linear-gradient(to bottom, #000 0%, #000 35%, transparent 100%);
+
+  // 写真本体 (ゆっくり寄っていく)
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: $backdrop-opacity;
+  }
+}
+
+// ページごとの写真
+.backdrop.--aboutUs::before {
+  background-image: url("./assets/main01.jpg");
+}
+
+@keyframes backdrop-zoom {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.2);
+  }
+}

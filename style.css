@@ -2,7 +2,7 @@
 /*
 Theme Name: Discover Echizen
 Description: This is a theme for Discover Echizen remade into a block theme.
-Version: 3.3.1
+Version: 3.4.0
 Requires PHP: 7.4
 Author: Taigo Ito
 Author URI: https://qwel.design/
@@ -218,11 +218,13 @@ button, input, select, textarea {
           user-select: none;
   cursor: pointer;
   transition: all 0.25s ease-in-out;
-  padding: 1rem;
-  border: 2px solid var(--wp--preset--color--background, #ffffff);
 }
 .wp-block-query-pagination-numbers .page-numbers:hover {
   opacity: 0.85;
+}
+.wp-block-query-pagination-numbers .page-numbers {
+  padding: 1rem;
+  border: 2px solid var(--wp--preset--color--background, #ffffff);
 }
 .wp-block-query-pagination-numbers .page-numbers.current {
   background-color: var(--wp--preset--color--primary-light, #d1f0fc);
@@ -336,6 +338,7 @@ button, input, select, textarea {
 .main {
   padding-top: var(--wp--custom--spacing--x-large, 6rem);
   padding-bottom: var(--wp--custom--spacing--large, 3rem);
+  overflow-x: clip;
 }
 .home .main {
   padding-top: 0;
@@ -437,6 +440,9 @@ button, input, select, textarea {
 .footer__logo {
   width: 15rem;
   filter: invert(1) grayscale(1) brightness(4);
+}
+.footer .copyright {
+  position: relative;
 }
 
 /**
@@ -758,7 +764,6 @@ button, input, select, textarea {
   width: 100%;
   margin-top: 0;
   margin-bottom: var(--wp--custom--spacing--medium, 1.5rem);
-  text-align: left;
 }
 .contact__table thead {
   border: 0;
@@ -777,6 +782,9 @@ button, input, select, textarea {
   font-size: var(--wp--custom--font-size--small, 0.875rem);
   line-height: var(--wp--custom--line-height--x-large, 2);
   letter-spacing: 0.04rem;
+}
+.contact__table {
+  text-align: left;
 }
 .contact__table th {
   width: 10.5rem;
@@ -847,6 +855,108 @@ button, input, select, textarea {
     padding-left: var(--wp--custom--spacing--large, 3rem);
     padding-right: var(--wp--custom--spacing--large, 3rem);
   }
+}
+
+/**
+ * Component - Backdrop
+ * ページの上部に敷く, 薄くした写真の背景 (新サイトと共通)
+ * 写真は下に向かって白く溶け, 続きのコンテンツへ目線を送る (スクロールを促す)
+ * 使い方: ページの本文の先頭にカスタム HTML ブロックで <div class="backdrop --aboutUs" aria-hidden="true"></div> を置く
+ * 写真はページごとの修飾クラス (--aboutUs など) で指定する (style.css からの相対パス)
+ */
+.main:has(.backdrop) {
+  position: relative;
+  isolation: isolate;
+}
+.main:has(.backdrop) .main__headerInner, .main:has(.backdrop) .main__body {
+  background-color: transparent;
+}
+
+.backdrop {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 50%;
+  width: 100%;
+  height: min(120vh, 64rem);
+  transform: translateX(-50%);
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 35%, transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 0%, #000 35%, transparent 100%);
+}
+.backdrop::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.25;
+}
+
+.backdrop.--aboutUs::before {
+  background-image: url("./assets/main01.jpg");
+}
+
+@keyframes backdrop-zoom {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.2);
+  }
+}
+/**
+ * Component - More Link
+ * 「もっと見る」などのテキストリンク. 文字の右に細い矢印を添える (ボタンにはしない)
+ * マウスを乗せると, 文字の下に線が左から伸び, 矢印が少し右へ進む
+ *
+ * <a class="moreLink" href="…"><span class="moreLink__label">ブログ&amp;ニュースをもっと見る</span></a>
+ */
+.moreLink {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 0.5em;
+  padding-block: 0.25em;
+  color: var(--wp--preset--color--primary-dark, #18aada);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+}
+.moreLink:hover, .moreLink:focus {
+  color: var(--wp--preset--color--primary-dark, #18aada);
+  text-decoration: none;
+}
+.moreLink__label {
+  padding-block-end: 0.2em;
+  background: linear-gradient(currentColor, currentColor) no-repeat left bottom/0 1px;
+  transition: background-size 0.35s ease;
+}
+.moreLink::after {
+  content: "";
+  flex: 0 0 auto;
+  width: 2.5em;
+  height: 0.625em;
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 10'%3E%3Cpath d='M0 9 H38 L30 1' fill='none' stroke='%23000' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right bottom/100% 100%;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 10'%3E%3Cpath d='M0 9 H38 L30 1' fill='none' stroke='%23000' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right bottom/100% 100%;
+  transition: transform 0.35s ease;
+}
+.moreLink:hover .moreLink__label, .moreLink:focus-visible .moreLink__label {
+  background-size: 100% 1px;
+}
+.moreLink:hover::after, .moreLink:focus-visible::after {
+  transform: translateX(0.5em);
+}
+@media (prefers-reduced-motion: reduce) {
+  .moreLink__label, .moreLink::after {
+    transition: none;
+  }
+}
+
+.entry .moreLink {
+  color: var(--wp--preset--color--primary-dark, #18aada);
+  text-decoration: none;
 }
 
 /**
@@ -1289,7 +1399,6 @@ button, input, select, textarea {
   width: 100%;
   flex: 0 0 50%;
   max-width: 50%;
-  padding: 0 0.375rem;
 }
 @media (min-width: 600px) {
   .lp__galleryItem.--sm {
@@ -1302,6 +1411,9 @@ button, input, select, textarea {
     flex: 0 0 25%;
     max-width: 25%;
   }
+}
+.lp__galleryItem.--sm {
+  padding: 0 0.375rem;
 }
 .lp__border {
   width: 100%;
@@ -1412,8 +1524,6 @@ button, input, select, textarea {
   width: 100%;
   flex: 0 0 83.3333333333%;
   max-width: 83.3333333333%;
-  margin-bottom: 1.5rem;
-  padding: 0 0.5rem;
 }
 @media (min-width: 600px) {
   .lp.--schoolExcursion .lp__section.--facility {
@@ -1432,6 +1542,10 @@ button, input, select, textarea {
     flex: 0 0 25%;
     max-width: 25%;
   }
+}
+.lp.--schoolExcursion .lp__section.--facility {
+  margin-bottom: 1.5rem;
+  padding: 0 0.5rem;
 }
 .lp.--schoolExcursion .lp__section.--facility img {
   display: block;
@@ -1477,7 +1591,6 @@ button, input, select, textarea {
   width: 100%;
   flex: 0 0 auto;
   max-width: none;
-  margin-bottom: 1.5rem;
 }
 @media (min-width: 600px) {
   .lp.--schoolExcursion .lp__section.--reserve .lp__content {
@@ -1491,6 +1604,9 @@ button, input, select, textarea {
     max-width: 100%;
   }
 }
+.lp.--schoolExcursion .lp__section.--reserve .lp__content {
+  margin-bottom: 1.5rem;
+}
 .lp.--schoolExcursion .lp__section.--announce {
   margin: 0 calc(50% - 50vw);
   padding-top: 1.5rem;
@@ -1502,13 +1618,15 @@ button, input, select, textarea {
   width: 100%;
   flex: 0 0 auto;
   max-width: none;
-  margin-top: 1.5rem;
 }
 @media (min-width: 1200px) {
   .lp.--schoolExcursion .lp__content.--goToPDF {
     flex: 0 0 50%;
     max-width: 50%;
   }
+}
+.lp.--schoolExcursion .lp__content.--goToPDF {
+  margin-top: 1.5rem;
 }
 .lp.--schoolExcursion .lp__content.--goToPDF a {
   display: block;
@@ -1548,14 +1666,16 @@ button, input, select, textarea {
   width: 100%;
   flex: 0 0 auto;
   max-width: none;
-  font-size: var(--wp--custom--font-size--small);
-  line-height: var(--wp--custom--line-height--large);
 }
 @media (min-width: 600px) {
   .lp.--schoolExcursion .lp__content.--trafficInfo .lp__content {
     flex: 0 0 75%;
     max-width: 75%;
   }
+}
+.lp.--schoolExcursion .lp__content.--trafficInfo .lp__content {
+  font-size: var(--wp--custom--font-size--small);
+  line-height: var(--wp--custom--line-height--large);
 }
 .lp.--schoolExcursion .lp__content.--announce {
   width: 100%;
@@ -1579,14 +1699,16 @@ button, input, select, textarea {
   width: 100%;
   flex: 0 0 50%;
   max-width: 50%;
-  margin-bottom: 0.75rem;
-  padding: 0 0.375rem;
 }
 @media (min-width: 1200px) {
   .lp.--schoolExcursion .lp__figure.--image_1, .lp.--schoolExcursion .lp__figure.--image_2 {
     flex: 0 0 33.3333333333%;
     max-width: 33.3333333333%;
   }
+}
+.lp.--schoolExcursion .lp__figure.--image_1, .lp.--schoolExcursion .lp__figure.--image_2 {
+  margin-bottom: 0.75rem;
+  padding: 0 0.375rem;
 }
 @media (min-width: 1200px) {
   .lp.--schoolExcursion .lp__figure.--image_1 {
@@ -1663,6 +1785,11 @@ button, input, select, textarea {
           user-select: none;
   cursor: pointer;
   transition: all 0.25s ease-in-out;
+}
+.lp.--schoolExcursion .lp__btn.--reservation:hover {
+  opacity: 0.85;
+}
+.lp.--schoolExcursion .lp__btn.--reservation {
   padding-right: 0.75rem;
   color: #ffffff;
   font-family: "游ゴシック", "Yu Gothic", sans-serif;
@@ -1670,9 +1797,6 @@ button, input, select, textarea {
   font-size: var(--wp--custom--font-size--small, 0.875rem);
   line-height: var(--wp--custom--line-height--x-large, 2);
   letter-spacing: 0.04rem;
-}
-.lp.--schoolExcursion .lp__btn.--reservation:hover {
-  opacity: 0.85;
 }
 .lp.--schoolExcursion .lp__btn.--reservation .icon {
   margin-left: 0.75rem;
@@ -1766,7 +1890,6 @@ button, input, select, textarea {
   width: 100%;
   flex: 0 0 54%;
   max-width: 54%;
-  margin: 0.75rem 0.375rem;
 }
 @media (min-width: 900px) {
   .lp.--work .lp__figure.--fig_1 {
@@ -1774,12 +1897,14 @@ button, input, select, textarea {
     max-width: 36%;
   }
 }
+.lp.--work .lp__figure.--fig_1 {
+  margin: 0.75rem 0.375rem;
+}
 .lp.--work .lp__figure.--fig_2, .lp.--work .lp__figure.--fig_3, .lp.--work .lp__figure.--fig_5, .lp.--work .lp__figure.--fig_6 {
   position: relative;
   width: 100%;
   flex: 0 0 48%;
   max-width: 48%;
-  margin: 0.75rem 0.375rem;
 }
 @media (min-width: 900px) {
   .lp.--work .lp__figure.--fig_2, .lp.--work .lp__figure.--fig_3, .lp.--work .lp__figure.--fig_5, .lp.--work .lp__figure.--fig_6 {
@@ -1787,12 +1912,14 @@ button, input, select, textarea {
     max-width: 32%;
   }
 }
+.lp.--work .lp__figure.--fig_2, .lp.--work .lp__figure.--fig_3, .lp.--work .lp__figure.--fig_5, .lp.--work .lp__figure.--fig_6 {
+  margin: 0.75rem 0.375rem;
+}
 .lp.--work .lp__figure.--fig_4 {
   position: relative;
   width: 100%;
   flex: 0 0 36%;
   max-width: 36%;
-  margin: 2.25rem 0.375rem -0.75rem;
 }
 @media (min-width: 900px) {
   .lp.--work .lp__figure.--fig_4 {
@@ -1800,18 +1927,23 @@ button, input, select, textarea {
     max-width: 24%;
   }
 }
+.lp.--work .lp__figure.--fig_4 {
+  margin: 2.25rem 0.375rem -0.75rem;
+}
 .lp.--work .lp__figure.--fig_7 {
   position: relative;
   width: 100%;
   flex: 0 0 42%;
   max-width: 42%;
-  margin: 2.25rem 0.375rem -0.75rem;
 }
 @media (min-width: 900px) {
   .lp.--work .lp__figure.--fig_7 {
     flex: 0 0 28%;
     max-width: 28%;
   }
+}
+.lp.--work .lp__figure.--fig_7 {
+  margin: 2.25rem 0.375rem -0.75rem;
 }
 @media (min-width: 900px) {
   .lp.--work .lp__figure.--fig_7 {
@@ -1824,7 +1956,6 @@ button, input, select, textarea {
   flex: 0 0 auto;
   max-width: none;
   width: 7.5rem;
-  margin-bottom: 1.5rem;
 }
 @media (min-width: 900px) {
   .lp.--work .lp__figure.--wrHeading {
@@ -1837,6 +1968,9 @@ button, input, select, textarea {
     flex: 0 0 20.8333333333%;
     max-width: 20.8333333333%;
   }
+}
+.lp.--work .lp__figure.--wrHeading {
+  margin-bottom: 1.5rem;
 }
 .lp.--work .lp__figure.--wrFig img {
   max-width: 21rem;
@@ -2422,13 +2556,13 @@ button, input, select, textarea {
   justify-content: space-around;
   align-items: center;
 }
-.postList.--grid .post {
-  margin-bottom: var(--wp--custom--spacing--medium, 1.5rem);
-}
 @media (min-width: 900px) {
   .postList.--grid .post {
     flex: 0 1 24rem;
   }
+}
+.postList.--grid .post {
+  margin-bottom: var(--wp--custom--spacing--medium, 1.5rem);
 }
 .postList.--grid .postItem__heading {
   font-size: var(--wp--custom--font-size--medium, 1.17rem);
@@ -2545,6 +2679,840 @@ section:not(.--discover) .section__inner {
   width: 100%;
   height: 100%;
   margin: auto;
+}
+
+/**
+ * Project - About Us
+ * 越前海岸盛り上げ隊とは (/about-us/. templates/page-about-us.html)
+ * 新サイト (proto.discoverechizen.com) の about-us と同じ構成: 説明 (リードと2段組み), メッセージ (波の帯), 沿革
+ * 沿革の年表は _history.scss
+ */
+.aboutUs__intro {
+  max-width: 54rem;
+  margin: 0 auto var(--wp--custom--spacing--large, 3rem);
+  padding-inline: var(--wp--custom--spacing--small, 0.75rem);
+}
+.aboutUs__lead {
+  margin: 0 0 var(--wp--custom--spacing--medium, 1.5rem);
+  color: var(--wp--preset--color--primary-dark, #18aada);
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.8;
+  letter-spacing: 0.04em;
+  word-break: auto-phrase;
+  text-wrap: balance;
+  text-shadow: 0 0 0.5em #fff, 0 0 0.15em #fff;
+}
+@media (min-width: 900px) {
+  .aboutUs__lead {
+    width: 27rem;
+    margin-inline: auto;
+    margin-block-end: var(--wp--custom--spacing--large, 3rem);
+    font-size: 1.125rem;
+    text-align: center;
+  }
+}
+@media (min-width: 900px) {
+  .aboutUs__columns {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--wp--custom--spacing--large, 3rem);
+  }
+}
+.aboutUs__columns p {
+  margin: 0;
+  font-size: 0.875rem;
+}
+.aboutUs__columns p + p {
+  margin-block-start: 1em;
+}
+@media (min-width: 900px) {
+  .aboutUs__columns p + p {
+    margin-block-start: 0;
+  }
+}
+.aboutUs__message {
+  position: relative;
+  width: 100vw;
+  margin: 3rem calc(50% - 50vw) calc(3rem + var(--wp--custom--spacing--medium, 1.5rem));
+  padding-block: var(--wp--custom--spacing--small, 0.75rem);
+  background-color: #eaf7fd;
+}
+.aboutUs__message::before, .aboutUs__message::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 40' preserveAspectRatio='none'%3E%3Cpath fill='%23eaf7fd' d='M0 20 Q150 0 300 20 T600 20 T900 20 T1200 20 V40 H0Z'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  background-size: 1200px 100%;
+  background-position: 0 bottom;
+  pointer-events: none;
+}
+.aboutUs__message::before {
+  bottom: 100%;
+}
+.aboutUs__message::after {
+  top: 100%;
+  transform: scaleY(-1);
+  background-position: -400px bottom;
+}
+.aboutUs__messageInner {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 0.75rem;
+  text-align: center;
+  line-height: 2;
+  letter-spacing: 0.04em;
+}
+.aboutUs__messageInner p {
+  margin: 0 0 var(--wp--custom--spacing--small, 0.75rem);
+  word-break: auto-phrase;
+  text-wrap: balance;
+}
+.aboutUs__messageInner > :last-child {
+  margin-block-end: 0;
+}
+.aboutUs__phrase {
+  display: inline-block;
+}
+.aboutUs__voice {
+  color: var(--wp--preset--color--primary-dark, #18aada);
+  font-weight: 700;
+  font-size: 1.25rem;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+}
+@media (min-width: 900px) {
+  .aboutUs__voice {
+    font-size: 1.5rem;
+  }
+}
+.aboutUs__messageMore {
+  margin-block-start: var(--wp--custom--spacing--medium, 1.5rem) !important;
+}
+.aboutUs__section {
+  margin-block: 0 var(--wp--custom--spacing--x-large, 6rem);
+}
+
+/**
+ * Project - History
+ * 沿革の年表 (/about-us/). 動きは js/history-timeline.js が書き込む CSS 変数から決める
+ *
+ * --history-progress: 縦の線の満ち具合 (0〜1)
+ * --item-progress: 各年の写真が開く・文章が出る進み具合 (0〜1)
+ * どちらも JS が動いていなければ 1 (最初から全部表示)
+ */
+.main:has(.history) {
+  isolation: isolate;
+}
+.main:has(.history) .main__body {
+  background-color: transparent;
+}
+
+.history {
+  --history-progress: 1;
+  position: relative;
+}
+@media (min-width: 900px) {
+  .history {
+    display: grid;
+    grid-template-columns: 11rem minmax(0, 1fr);
+    gap: var(--wp--custom--spacing--large, 3rem);
+  }
+}
+.history__sea {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  pointer-events: none;
+}
+.history__sea.is-visible {
+  opacity: 1;
+}
+.history:not(.is-animated) .history__sea {
+  display: none;
+}
+.history__current {
+  display: none;
+}
+@media (min-width: 900px) {
+  .history__current {
+    position: sticky;
+    top: calc(var(--scroll-offset, 0px) + var(--wp--custom--spacing--x-large, 6rem));
+    align-self: start;
+    display: block;
+    margin: 0;
+    color: var(--wp--preset--color--primary, #37bef0);
+    text-shadow: 0 0 0.5em #fff, 0 0 0.15em #fff;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 4.5rem;
+    line-height: 1;
+    letter-spacing: 0.02em;
+  }
+}
+.history__current span {
+  display: inline-block;
+}
+.history__current span.is-changed {
+  animation: history-year-change 0.5s ease both;
+}
+.history:not(.is-animated) .history__current {
+  visibility: hidden;
+}
+.history__list {
+  list-style: none;
+  padding-left: 0;
+  position: relative;
+  margin: 0;
+  padding-inline-start: 2.75rem;
+}
+.history__list::before, .history__list::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0.75rem;
+  width: 2px;
+  border-radius: 1px;
+}
+.history__list::before {
+  bottom: 0;
+  background-color: rgba(55, 190, 240, 0.2);
+}
+.history__list::after {
+  height: calc(var(--history-progress) * 100%);
+  background: linear-gradient(var(--wp--preset--color--primary-dark, #18aada), var(--wp--preset--color--primary, #37bef0));
+}
+.history__item {
+  --item-progress: 1;
+  position: relative;
+  margin: 0;
+  padding-block-end: var(--wp--custom--spacing--x-large, 6rem);
+}
+.history__item:last-child {
+  padding-block-end: 0;
+}
+.history__item::before {
+  content: "";
+  position: absolute;
+  top: 0.55rem;
+  left: calc(0.75rem - 2.75rem - 1rem / 2 + 1px);
+  z-index: 1;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid var(--wp--preset--color--primary, #37bef0);
+  border-radius: 50%;
+  background-color: #fff;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+.history__item.is-passed::before, .history:not(.is-animated) .history__item::before {
+  background-color: var(--wp--preset--color--primary, #37bef0);
+}
+.history__item.is-passed::before {
+  transform: scale(1.2);
+}
+.history__entry {
+  --item-progress: 1;
+}
+.history__entry + .history__entry {
+  margin-block-start: var(--wp--custom--spacing--large, 3rem);
+}
+@media (min-width: 900px) {
+  .history__entry.has-figure {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: var(--wp--custom--spacing--large, 3rem);
+    align-items: center;
+  }
+}
+@media (min-width: 900px) {
+  .history__entry.is-reverse .history__figure {
+    order: -1;
+  }
+}
+.history__body {
+  opacity: clamp(0, var(--item-progress) * 1.6 - 0.3, 1);
+  transform: translateY(calc((1 - var(--item-progress)) * 1.5rem));
+}
+.history__year, .history__title {
+  text-shadow: 0 0 0.5em #fff, 0 0 0.15em #fff;
+}
+.history__year {
+  opacity: clamp(0, var(--item-progress) * 1.6 - 0.3, 1);
+  transform: translateY(calc((1 - var(--item-progress)) * 1.5rem));
+  margin: 0 0 var(--wp--custom--spacing--x-small, 0.375rem);
+  color: var(--wp--preset--color--primary-dark, #18aada);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1.8;
+  letter-spacing: 0.04em;
+}
+.history__title {
+  margin-block: 0 var(--wp--custom--spacing--small, 0.75rem);
+  font-weight: 700;
+  font-size: 1.25rem;
+  line-height: 1.8;
+  letter-spacing: 0.06em;
+}
+.history__text {
+  line-height: 2;
+  letter-spacing: 0.04em;
+}
+.history__text > * {
+  margin: 0;
+}
+.history__text > * + * {
+  margin-block-start: 1em;
+}
+.history__text a {
+  color: var(--wp--preset--color--primary-dark, #18aada);
+  text-decoration: underline;
+}
+.history__figure {
+  margin: var(--wp--custom--spacing--medium, 1.5rem) 0 0;
+}
+@media (min-width: 900px) {
+  .history__figure {
+    margin-block-start: 0;
+  }
+}
+.history__figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16/10;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 0.5rem;
+  clip-path: inset(0 calc((1 - var(--item-progress)) * 100%) 0 0 round 0.5rem);
+}
+
+@keyframes history-year-change {
+  from {
+    opacity: 0;
+    transform: translateY(0.5em);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .history__current span.is-changed {
+    animation: none;
+  }
+}
+/**
+ * Project - Study Tour
+ * 教育旅行 (/study-tour/)
+ * 旧サイトのイラスト・見出し画像は使わず, 新サイトの見出し (titleArea) とカードだけで組む
+ */
+.studyTour {
+  --tone: var(--wp--preset--color--primary, #37bef0);
+  --tone-text: var(--wp--preset--color--primary-dark, #18aada);
+  --tone-tint: rgba(55, 190, 240, 0.1);
+}
+.studyTour .is-sea {
+  --tone: var(--wp--preset--color--primary, #37bef0);
+  --tone-text: var(--wp--preset--color--primary-dark, #18aada);
+  --tone-tint: rgba(55, 190, 240, 0.1);
+}
+.studyTour .is-mountain {
+  --tone: #5aae3a;
+  --tone-text: #3d8a2a;
+  --tone-tint: rgba(90, 174, 58, 0.12);
+}
+.studyTour .is-village {
+  --tone: #f08c1e;
+  --tone-text: #b85410;
+  --tone-tint: rgba(240, 140, 30, 0.1);
+}
+.studyTour__intro {
+  display: grid;
+  gap: var(--wp--custom--spacing--large, 3rem);
+  align-items: center;
+  margin-block: 0 var(--wp--custom--spacing--x-large, 6rem);
+}
+@media (min-width: 900px) {
+  .studyTour__intro {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+.studyTour__lead > :last-child {
+  margin-block-end: 0;
+}
+.studyTour__catch {
+  color: var(--wp--preset--color--primary-dark, #18aada);
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+}
+.studyTour__mosaic {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--wp--custom--spacing--small, 0.75rem);
+}
+.studyTour__mosaic img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: var(--wp--custom--spacing--small, 0.75rem);
+}
+.studyTour__mosaic img:nth-child(even) {
+  transform: translateY(var(--wp--custom--spacing--medium, 1.5rem));
+}
+.studyTour__section {
+  margin-block: 0 var(--wp--custom--spacing--x-large, 6rem);
+}
+.studyTour__sectionLead {
+  margin-block: 0 var(--wp--custom--spacing--large, 3rem);
+  text-align: center;
+  line-height: 1.8;
+  letter-spacing: 0.04em;
+}
+.studyTour__note {
+  margin-block: var(--wp--custom--spacing--medium, 1.5rem) 0;
+  color: #808080;
+  font-size: 0.875rem;
+  letter-spacing: 0.04em;
+}
+.studyTour__features {
+  list-style: none;
+  padding-left: 0;
+  display: grid;
+  gap: var(--wp--custom--spacing--medium, 1.5rem);
+  margin: 0;
+  counter-reset: feature;
+}
+@media (min-width: 900px) {
+  .studyTour__features {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.studyTour__feature {
+  padding: var(--wp--custom--spacing--medium, 1.5rem);
+  border-radius: var(--wp--custom--spacing--small, 0.75rem);
+  background-color: var(--tone-tint);
+  counter-increment: feature;
+  line-height: 1.8;
+  letter-spacing: 0.04em;
+}
+.studyTour__feature::before {
+  content: counter(feature, decimal-leading-zero);
+  display: block;
+  color: var(--tone);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+.studyTour__feature p {
+  margin: 0;
+}
+.studyTour__featureTitle {
+  font-weight: 700;
+  margin-block: var(--wp--custom--spacing--x-small, 0.375rem) var(--wp--custom--spacing--small, 0.75rem);
+  font-size: 1.125rem;
+  letter-spacing: 0.08em;
+}
+.studyTour__videos {
+  display: grid;
+  gap: var(--wp--custom--spacing--medium, 1.5rem);
+  margin-block: 0 var(--wp--custom--spacing--large, 3rem);
+}
+@media (min-width: 900px) {
+  .studyTour__videos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.studyTour__video {
+  margin: 0;
+}
+.studyTour__video video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16/9;
+  border-radius: var(--wp--custom--spacing--small, 0.75rem);
+  background-color: #000;
+}
+.studyTour__video figcaption {
+  margin-block-start: var(--wp--custom--spacing--x-small, 0.375rem);
+  color: #808080;
+  font-size: 0.875rem;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+.studyTour__gallery {
+  list-style: none;
+  padding-left: 0;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min(60vw, 15rem);
+  gap: var(--wp--custom--spacing--small, 0.75rem);
+  margin: 0 0 var(--wp--custom--spacing--large, 3rem);
+  padding-block-end: var(--wp--custom--spacing--small, 0.75rem);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+}
+.studyTour__gallery li {
+  scroll-snap-align: start;
+}
+.studyTour__gallery img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: var(--wp--custom--spacing--small, 0.75rem);
+}
+.studyTour__programs {
+  list-style: none;
+  padding-left: 0;
+  display: grid;
+  gap: var(--wp--custom--spacing--small, 0.75rem);
+  margin: 0;
+}
+@media (min-width: 600px) {
+  .studyTour__programs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1200px) {
+  .studyTour__programs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.studyTour__program {
+  padding: var(--wp--custom--spacing--small, 0.75rem) var(--wp--custom--spacing--medium, 1.5rem);
+  border-inline-start: 4px solid var(--tone);
+  border-radius: 0 var(--wp--custom--spacing--small, 0.75rem) var(--wp--custom--spacing--small, 0.75rem) 0;
+  background-color: var(--tone-tint);
+  letter-spacing: 0.04em;
+}
+.studyTour__host {
+  margin: 0;
+  color: #808080;
+  font-size: 0.875rem;
+}
+.studyTour__fields {
+  list-style: none;
+  padding-left: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--wp--custom--spacing--x-small, 0.375rem) var(--wp--custom--spacing--small, 0.75rem);
+  margin: 0 0 var(--wp--custom--spacing--medium, 1.5rem);
+}
+.studyTour__field {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.2em 0.9em;
+  border-radius: 999px;
+  background-color: var(--tone-tint);
+  color: var(--tone-text);
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: 0.06em;
+}
+.studyTour__field::before {
+  content: "";
+  width: 0.6em;
+  height: 0.6em;
+  border-radius: 50%;
+  background-color: var(--tone);
+}
+.studyTour__program {
+  position: relative;
+}
+.studyTour__program .studyTour__field {
+  position: absolute;
+  top: var(--wp--custom--spacing--small, 0.75rem);
+  right: var(--wp--custom--spacing--small, 0.75rem);
+  padding: 0 0.6em;
+  background-color: #fff;
+}
+.studyTour__program .studyTour__field::before {
+  display: none;
+}
+.studyTour__programTitle {
+  font-weight: 700;
+  margin: 0;
+  font-size: 1.125rem;
+  line-height: 1.8;
+}
+.studyTour__programText {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.8;
+}
+.studyTour__stays {
+  display: grid;
+  gap: var(--wp--custom--spacing--large, 3rem) var(--wp--custom--spacing--x-large, 6rem);
+}
+@media (min-width: 900px) {
+  .studyTour__stays {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.studyTour__areaName {
+  font-weight: 700;
+  margin: 0 0 var(--wp--custom--spacing--small, 0.75rem);
+  padding-block-end: var(--wp--custom--spacing--x-small, 0.375rem);
+  border-block-end: 2px solid var(--tone);
+  color: var(--tone-text);
+  font-size: 1.125rem;
+  letter-spacing: 0.08em;
+}
+.studyTour__stayList {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+.studyTour__stayList li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0 var(--wp--custom--spacing--small, 0.75rem);
+  padding-block: var(--wp--custom--spacing--x-small, 0.375rem);
+  border-block-end: 1px solid #d9d9d9;
+  line-height: 1.8;
+}
+.studyTour__stayName {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.studyTour__stayMeta {
+  color: #808080;
+  font-size: 0.875rem;
+}
+.studyTour__stayMeta a {
+  color: inherit;
+}
+.studyTour__steps {
+  list-style: none;
+  padding-left: 0;
+  display: grid;
+  gap: var(--wp--custom--spacing--medium, 1.5rem);
+  margin: 0 0 var(--wp--custom--spacing--large, 3rem);
+  counter-reset: step;
+}
+@media (min-width: 900px) {
+  .studyTour__steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.studyTour__step {
+  position: relative;
+  padding: var(--wp--custom--spacing--medium, 1.5rem);
+  border: 2px solid var(--tone);
+  border-radius: var(--wp--custom--spacing--small, 0.75rem);
+  counter-increment: step;
+  line-height: 1.8;
+  letter-spacing: 0.04em;
+}
+.studyTour__step::before {
+  content: "STEP " counter(step);
+  color: var(--tone-text);
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+.studyTour__step p {
+  margin: 0;
+}
+.studyTour__stepTitle {
+  font-weight: 700;
+  margin-block: 0 var(--wp--custom--spacing--x-small, 0.375rem);
+  font-size: 1.125rem;
+}
+.studyTour__columns {
+  display: grid;
+  gap: var(--wp--custom--spacing--medium, 1.5rem);
+}
+@media (min-width: 1200px) {
+  .studyTour__columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.studyTour__box {
+  padding: var(--wp--custom--spacing--medium, 1.5rem);
+  border-radius: var(--wp--custom--spacing--small, 0.75rem);
+  background-color: rgba(55, 190, 240, 0.1);
+  line-height: 1.8;
+  letter-spacing: 0.04em;
+}
+.studyTour__box > p {
+  margin-block: 0 var(--wp--custom--spacing--small, 0.75rem);
+}
+.studyTour__box > :last-child {
+  margin-block-end: 0;
+}
+.studyTour__boxTitle {
+  font-weight: 700;
+  margin-block: 0 var(--wp--custom--spacing--small, 0.75rem);
+  color: var(--wp--preset--color--primary-dark, #18aada);
+  font-size: 1.125rem;
+  letter-spacing: 0.08em;
+}
+.studyTour__table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+}
+.studyTour__table th, .studyTour__table td {
+  padding: var(--wp--custom--spacing--x-small, 0.375rem) var(--wp--custom--spacing--small, 0.75rem);
+  border-block-end: 1px solid #d9d9d9;
+  text-align: left;
+}
+.studyTour__table th {
+  font-weight: 700;
+  white-space: nowrap;
+}
+.studyTour__table.is-access td:last-child {
+  text-align: right;
+}
+@media (max-width: 599.9px) {
+  .studyTour__table.is-access tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    border-block-end: 1px solid #d9d9d9;
+  }
+  .studyTour__table.is-access tr th {
+    grid-column: 1/-1;
+    padding-block-end: 0;
+    border: 0;
+  }
+  .studyTour__table.is-access tr td {
+    padding-block-start: 0;
+    border: 0;
+  }
+}
+.studyTour__faq {
+  margin: 0;
+}
+.studyTour__faq dt {
+  position: relative;
+  padding-inline-start: 1.75em;
+  font-weight: 700;
+}
+.studyTour__faq dt::before {
+  content: "Q";
+  position: absolute;
+  left: 0;
+  color: var(--wp--preset--color--primary, #37bef0);
+  font-style: italic;
+}
+.studyTour__faq dd {
+  position: relative;
+  margin: 0 0 var(--wp--custom--spacing--small, 0.75rem);
+  padding-inline-start: 1.75em;
+}
+.studyTour__faq dd::before {
+  content: "A";
+  position: absolute;
+  left: 0;
+  color: #f08c1e;
+  font-style: italic;
+  font-weight: 700;
+}
+.studyTour__faq dd:last-child {
+  margin-block-end: 0;
+}
+.studyTour__faq a {
+  color: var(--wp--preset--color--primary-dark, #18aada);
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+.studyTour__coast {
+  display: grid;
+  gap: var(--wp--custom--spacing--medium, 1.5rem) var(--wp--custom--spacing--large, 3rem);
+  align-items: center;
+  margin-block: 0 var(--wp--custom--spacing--large, 3rem);
+}
+@media (min-width: 900px) {
+  .studyTour__coast {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+.studyTour__coastText {
+  margin: 0;
+  line-height: 2;
+  letter-spacing: 0.04em;
+}
+.studyTour__coastMap {
+  margin: 0;
+}
+.studyTour__coastMap img {
+  width: 100%;
+  max-width: 33.75rem;
+  height: auto;
+  margin-inline: auto;
+}
+.studyTour__concierge {
+  display: grid;
+  gap: var(--wp--custom--spacing--medium, 1.5rem) var(--wp--custom--spacing--large, 3rem);
+  align-items: center;
+  margin-block: 0 var(--wp--custom--spacing--x-large, 6rem);
+  padding: var(--wp--custom--spacing--large, 3rem) var(--wp--custom--spacing--medium, 1.5rem);
+  border-radius: var(--wp--custom--spacing--medium, 1.5rem);
+  background-color: var(--tone-tint);
+  line-height: 1.8;
+  letter-spacing: 0.04em;
+}
+@media (min-width: 900px) {
+  .studyTour__concierge {
+    grid-template-columns: 12rem minmax(0, 1fr);
+    padding: var(--wp--custom--spacing--large, 3rem);
+  }
+}
+.studyTour__conciergeFigure {
+  width: 9rem;
+  margin: 0 auto;
+}
+@media (min-width: 900px) {
+  .studyTour__conciergeFigure {
+    width: 100%;
+  }
+}
+.studyTour__conciergeFigure img {
+  width: 100%;
+  aspect-ratio: 1;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 50%;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+.studyTour__conciergeBody > p {
+  margin-block: 0 var(--wp--custom--spacing--small, 0.75rem);
+}
+.studyTour__conciergeRole {
+  color: #808080;
+  font-size: 0.875rem;
+}
+.studyTour__conciergeName {
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: 0.08em;
+}
+.studyTour__ctas {
+  list-style: none;
+  padding-left: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--wp--custom--spacing--small, 0.75rem) var(--wp--custom--spacing--large, 3rem);
+  margin-block: var(--wp--custom--spacing--medium, 1.5rem) 0;
 }
 
 /**
@@ -4012,5 +4980,35 @@ section:not(.--discover) .section__inner {
 @media (max-width: 1199.9px) {
   .--visible_lg {
     display: none !important;
+  }
+}
+
+/**
+ * Utility - Readable
+ * スクロールして画面に入った要素をふわっと表示する (JS: ActionCore.ReadableOnScroll)
+ * ブロックの「追加 CSS クラス」に --readable を書く (data-readable 属性でも可)
+ * html.has-readable は init.js が付ける (JS が動かないときは最初から表示)
+ * エディター (.editor-styles-wrapper) の中では常に表示する
+ */
+.has-readable .--readable, .has-readable [data-readable] {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.has-readable .is-inview {
+  opacity: 1;
+  transform: none;
+}
+
+.editor-styles-wrapper .--readable, .editor-styles-wrapper [data-readable] {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .has-readable .--readable, .has-readable [data-readable] {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }

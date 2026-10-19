@@ -1,0 +1,70 @@
+/**
+ * Component - More Link
+ * 「もっと見る」などのテキストリンク. 文字の右に細い矢印を添える (ボタンにはしない)
+ * マウスを乗せると, 文字の下に線が左から伸び, 矢印が少し右へ進む
+ *
+ * <a class="moreLink" href="…"><span class="moreLink__label">ブログ&amp;ニュースをもっと見る</span></a>
+ */
+
+$more-link-color:    themeColor("primaryDark") !default;
+$more-link-duration: 0.35s !default;
+
+// 矢印 (線の先に上向きの返しだけを付けた, 片矢印). mask に使うので色は問わない
+$more-link-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 10'%3E%3Cpath d='M0 9 H38 L30 1' fill='none' stroke='%23000' stroke-width='1.5'/%3E%3C/svg%3E");
+
+.moreLink {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 0.5em;
+  padding-block: 0.25em;
+  color: $more-link-color;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+
+  &:hover, &:focus {
+    color: $more-link-color;
+    text-decoration: none;
+  }
+
+  // 文字の下の線 (ふだんは幅 0. マウスを乗せると左から伸びる)
+  &__label {
+    padding-block-end: 0.2em;
+    background: linear-gradient(currentColor, currentColor) no-repeat left bottom / 0 1px;
+    transition: background-size $more-link-duration ease;
+  }
+
+  // 矢印 (文字と同じ色. 線の高さを文字の下の線にそろえる)
+  &::after {
+    content: "";
+    flex: 0 0 auto;
+    width: 2.5em;
+    height: 0.625em;
+    background-color: currentColor;
+    -webkit-mask: $more-link-arrow no-repeat right bottom / 100% 100%;
+    mask: $more-link-arrow no-repeat right bottom / 100% 100%;
+    transition: transform $more-link-duration ease;
+  }
+
+  &:hover, &:focus-visible {
+    .moreLink__label {
+      background-size: 100% 1px;
+    }
+
+    &::after {
+      transform: translateX(0.5em);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &__label, &::after {
+      transition: none;
+    }
+  }
+}
+
+// 本文 (.entry) の中に置いたときも, 本文のリンクの下線・色を引き継がない
+.entry .moreLink {
+  color: $more-link-color;
+  text-decoration: none;
+}

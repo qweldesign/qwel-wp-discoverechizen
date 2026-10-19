@@ -5,6 +5,9 @@
 .main {
   padding-top: space(5); // header height
   padding-bottom: space(4);
+  // 画面幅いっぱいの帯 (width: 100vw) は, スクロールバーがある環境ではその幅だけはみ出し,
+  // 横スクロールが出てしまうので切り落とす (clip はスクロール領域を作らないので, sticky も効いたまま)
+  overflow-x: clip;
 
   .home & {
     padding-top: 0;
