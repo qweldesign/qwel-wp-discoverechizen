@@ -32,8 +32,8 @@ body {
   margin: 0;
   background-color: var(--wp--preset--color--background, #ffffff);
   color: var(--wp--preset--color--dark, #333333);
-  font-family: "游ゴシック", "Yu Gothic", sans-serif;
-  font-weight: 500;
+  font-family: "Noto Sans JP", "游ゴシック", "Yu Gothic", sans-serif;
+  font-weight: 400;
   line-height: var(--wp--custom--line-height--large, 1.8);
   letter-spacing: 0;
   -webkit-text-size-adjust: 100%;
@@ -42,8 +42,8 @@ body {
 h1, h2, h3, h4, h5, h6 {
   margin-top: var(--wp--custom--spacing--medium, 1.5rem);
   margin-bottom: var(--wp--custom--spacing--small, 0.75rem);
-  font-family: "游ゴシック", "Yu Gothic", sans-serif;
-  font-weight: 500;
+  font-family: "Noto Sans JP", "游ゴシック", "Yu Gothic", sans-serif;
+  font-weight: 400;
 }
 
 h1 {
