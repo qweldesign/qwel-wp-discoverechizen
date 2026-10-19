@@ -6,6 +6,10 @@
   padding-top: space(5); // header height
   padding-bottom: space(4);
 
+  .home & {
+    padding-top: 0;
+  }
+
   &__headerInner {
     background-color: $bodyBg;
   }

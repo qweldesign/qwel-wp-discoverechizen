@@ -4,6 +4,8 @@
 
 .discoverMap {
   .section__titleArea {
+    max-width: var(--wp--style--global--wide-size);
+
     .section__titleText {
       color: var(--wp--preset--color--white)
     }

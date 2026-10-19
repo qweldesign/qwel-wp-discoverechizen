@@ -337,6 +337,9 @@ button, input, select, textarea {
   padding-top: var(--wp--custom--spacing--x-large, 6rem);
   padding-bottom: var(--wp--custom--spacing--large, 3rem);
 }
+.home .main {
+  padding-top: 0;
+}
 .main__headerInner {
   background-color: var(--wp--preset--color--background, #ffffff);
 }
@@ -2143,6 +2146,9 @@ button, input, select, textarea {
 /**
  * Project - Discover Map
  */
+.discoverMap .section__titleArea {
+  max-width: var(--wp--style--global--wide-size);
+}
 .discoverMap .section__titleArea .section__titleText {
   color: var(--wp--preset--color--white);
 }
